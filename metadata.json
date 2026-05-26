@@ -1,0 +1,6 @@
+{
+  "name": "AnimeTracker",
+  "description": "Anime tracker with Shikimori search integration, custom watchlists, rankings, and details.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
