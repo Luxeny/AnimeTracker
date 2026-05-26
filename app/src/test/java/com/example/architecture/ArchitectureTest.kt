@@ -37,15 +37,30 @@ class ArchitectureTest {
   }
 
   @Test
-  fun `ui layer does not depend on data layer`() {
+  fun `feature ui modules do not depend on data layer`() {
     Konsist.scopeFromProject()
       .files
-      .withPackage("com.example.ui..")
+      .filter { file -> file.path.contains("feature") && file.path.contains("ui") }
       .assertFalse { file ->
         file.imports.any { importDeclaration ->
           importDeclaration.name.startsWith("com.example.data")
         }
       }
+  }
+
+  @Test
+  fun `ui layer does not depend on data layer`() {
+    val uiPackages = listOf("com.example.ui..", "com.example.feature..")
+    uiPackages.forEach { uiPackage ->
+      Konsist.scopeFromProject()
+        .files
+        .withPackage(uiPackage)
+        .assertFalse { file ->
+          file.imports.any { importDeclaration ->
+            importDeclaration.name.startsWith("com.example.data")
+          }
+        }
+    }
   }
 
   @Test

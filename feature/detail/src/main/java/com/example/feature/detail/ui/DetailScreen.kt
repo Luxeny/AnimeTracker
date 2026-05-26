@@ -1,4 +1,4 @@
-package com.example.ui.screens
+package com.example.feature.detail.ui
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*

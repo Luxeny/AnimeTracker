@@ -1,4 +1,4 @@
-package com.example.ui.screens
+package com.example.feature.explore.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

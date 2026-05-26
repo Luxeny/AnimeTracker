@@ -1,4 +1,4 @@
-package com.example.ui.screens
+package com.example.feature.watchlist.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

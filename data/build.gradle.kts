@@ -24,6 +24,7 @@ android {
 dependencies {
   implementation(project(":domain"))
   implementation(project(":core"))
+  implementation(libs.koin.android)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.androidx.room.ktx)

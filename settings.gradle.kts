@@ -26,6 +26,9 @@ rootProject.name = "AnimeTracker"
 
 include(":app")
 include(":core")
+include(":core:navigation")
 include(":domain")
 include(":data")
-include(":ui")
+include(":feature:explore")
+include(":feature:watchlist")
+include(":feature:detail")
