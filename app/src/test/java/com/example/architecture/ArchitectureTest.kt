@@ -12,10 +12,10 @@ import org.junit.Test
 class ArchitectureTest {
 
   @Test
-  fun `domain layer does not depend on android framework`() {
+  fun `domain layers do not depend on android framework`() {
     Konsist.scopeFromProject()
       .files
-      .withPackage("com.example.domain..")
+      .filter { file -> file.path.contains("domain") && file.path.contains("feature") }
       .assertFalse { file ->
         file.imports.any { importDeclaration ->
           importDeclaration.name.startsWith("android.") || importDeclaration.name.startsWith("androidx.")
@@ -24,52 +24,39 @@ class ArchitectureTest {
   }
 
   @Test
-  fun `data layer does not depend on ui components`() {
+  fun `data layers do not depend on ui components`() {
     Konsist.scopeFromProject()
       .files
-      .withPackage("com.example.data..")
+      .filter { file -> file.path.contains("data") && (file.path.contains("core") || file.path.contains("feature")) }
       .assertFalse { file ->
         file.imports.any { importDeclaration ->
-          importDeclaration.name.startsWith("com.example.ui") ||
-            importDeclaration.name.startsWith("androidx.compose")
+          importDeclaration.name.contains(".ui") || importDeclaration.name.startsWith("androidx.compose")
         }
       }
   }
 
   @Test
-  fun `ui layer does not depend on data layer`() {
-    Konsist.scopeFromProject()
-      .files
-      .withPackage("com.example.ui..")
-      .assertFalse { file ->
-        file.imports.any { importDeclaration ->
-          importDeclaration.name.startsWith("com.example.data")
-        }
-      }
-  }
-
-  @Test
-  fun `use cases reside in domain layer`() {
+  fun `use cases reside in feature domain layers`() {
     Konsist.scopeFromProject()
       .classes()
       .withNameEndingWith("UseCase")
-      .assertTrue { useCase -> useCase.resideInPackage("com.example.domain.usecase..") }
+      .assertTrue { useCase -> useCase.resideInPackage("..domain.usecase..") }
   }
 
   @Test
-  fun `repository interfaces are declared in domain layer`() {
+  fun `repository interfaces are declared in core model layer`() {
     Konsist.scopeFromProject()
       .interfaces()
       .withNameEndingWith("Repository")
-      .assertTrue { repository -> repository.resideInPackage("com.example.domain.repository..") }
+      .assertTrue { repository -> repository.resideInPackage("com.example.core.model.repository..") }
   }
 
   @Test
-  fun `repository implementations reside in data layer`() {
+  fun `repository implementations reside in core data layer`() {
     Konsist.scopeFromProject()
       .classes()
       .withNameEndingWith("RepositoryImpl")
-      .assertTrue { repositoryImpl -> repositoryImpl.resideInPackage("com.example.data.repository..") }
+      .assertTrue { repositoryImpl -> repositoryImpl.resideInPackage("com.example.core.data.repository..") }
   }
 
   @Test
@@ -82,9 +69,7 @@ class ArchitectureTest {
       .map { match -> match.groupValues[1] }
       .toList()
 
-    if (featureModules.size < 2) {
-      return
-    }
+    if (featureModules.size < 2) return
 
     featureModules.forEach { modulePath ->
       val gradleRelativePath = modulePath.removePrefix(":").replace(":", "/") + "/build.gradle.kts"

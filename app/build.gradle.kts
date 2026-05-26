@@ -1,7 +1,6 @@
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
-  alias(libs.plugins.google.devtools.ksp)
   alias(libs.plugins.roborazzi)
   alias(libs.plugins.secrets)
 }
@@ -20,7 +19,6 @@ android {
     targetSdk = 36
     versionCode = 1
     versionName = "1.0"
-
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
@@ -60,34 +58,34 @@ secrets {
 
 dependencies {
   implementation(project(":core"))
-  implementation(project(":domain"))
-  implementation(project(":data"))
-  implementation(project(":ui"))
+  implementation(project(":core:model"))
+  implementation(project(":core:data"))
+  implementation(project(":core:navigation"))
+  implementation(project(":feature:explore:domain"))
+  implementation(project(":feature:explore:data"))
+  implementation(project(":feature:explore:ui"))
+  implementation(project(":feature:watchlist:domain"))
+  implementation(project(":feature:watchlist:data"))
+  implementation(project(":feature:watchlist:ui"))
+  implementation(project(":feature:detail:domain"))
+  implementation(project(":feature:detail:data"))
+  implementation(project(":feature:detail:ui"))
 
   implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.compose.material.icons.core)
+  implementation(libs.androidx.compose.material.icons.extended)
   implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.compose.ui)
+  implementation(libs.androidx.compose.ui.graphics)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
+  implementation(libs.androidx.lifecycle.runtime.compose)
 
-  testImplementation(libs.androidx.compose.ui.test.junit4)
-  testImplementation(libs.androidx.core)
-  testImplementation(libs.androidx.junit)
   testImplementation(libs.junit)
-  testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.konsist)
-  testImplementation(libs.robolectric)
-  testImplementation(libs.roborazzi)
-  testImplementation(libs.roborazzi.compose)
-  testImplementation(libs.roborazzi.junit.rule)
-
-  androidTestImplementation(platform(libs.androidx.compose.bom))
-  androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-  androidTestImplementation(libs.androidx.espresso.core)
+  testImplementation(libs.kotlinx.coroutines.test)
   androidTestImplementation(libs.androidx.junit)
-  androidTestImplementation(libs.androidx.runner)
-
-  debugImplementation(libs.androidx.compose.ui.test.manifest)
   debugImplementation(libs.androidx.compose.ui.tooling)
 }
