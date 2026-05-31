@@ -82,10 +82,21 @@ dependencies {
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.lifecycle.runtime.compose)
+  implementation(libs.koin.android)
+  implementation(libs.koin.androidx.compose)
 
   testImplementation(libs.junit)
   testImplementation(libs.konsist)
   testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.roborazzi)
+  testImplementation(libs.roborazzi.compose)
+  testImplementation(libs.roborazzi.junit.rule)
+  testImplementation(libs.androidx.core)
+  testImplementation(libs.androidx.runner)
+  testImplementation(libs.androidx.compose.ui.test.junit4)
+  debugImplementation(libs.androidx.compose.ui.test.manifest)
+
   androidTestImplementation(libs.androidx.junit)
   debugImplementation(libs.androidx.compose.ui.tooling)
 }
