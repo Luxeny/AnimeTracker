@@ -1,13 +1,14 @@
 package com.example.core.analytics.service
 
-import android.util.Log
-
 class FakeAnalyticsService : AnalyticsService {
+    val trackedEvents = mutableListOf<Pair<String, Map<String, Any>>>()
+
     override fun trackEvent(name: String, params: Map<String, Any>) {
-        Log.d("FakeAnalytics", "Event tracked: $name with params: $params")
+        trackedEvents.add(name to params)
+        println("FakeAnalytics: Event tracked: $name with params: $params")
     }
 
     override fun trackError(message: String, error: Throwable?) {
-        Log.d("FakeAnalytics", "Error tracked: $message", error)
+        println("FakeAnalytics: Error tracked: $message")
     }
 }
