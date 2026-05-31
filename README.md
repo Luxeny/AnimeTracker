@@ -1,21 +1,26 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Anime Tracker
 
-# Run and deploy your AI Studio app
+Android-приложение для отслеживания аниме, поиска новых тайтлов и управления списком просмотра. Проект выполнен в рамках лабораторной работы по изучению архитектурных подходов и многомодульности в Android.
 
-This contains everything you need to run your app locally.
+## Основные возможности
+- **Поиск:** Поиск аниме через API Shikimori.
+- **Рекомендации:** Персонализированная лента на главном экране.
+- **Мой список:** Управление статусом просмотра, оценка и отслеживание прогресса по сериям.
+- **Детали:** Подробная информация о каждом аниме.
 
-View your app in AI Studio: https://ai.studio/apps/941d454e-ae7d-4f2d-9853-3459c5cd3d65
+## Технологический стек
+- **Язык:** Kotlin
+- **UI:** Jetpack Compose (Material 3)
+- **DI:** Koin
+- **Local DB:** Room
+- **Network:** Retrofit + Moshi
+- **Architecture:** Clean Architecture + Multi-module
+- **Testing:** Konsist (Architecture tests)
 
-## Run Locally
+## Структура проекта
+В репозитории представлены три варианта организации модулей:
+1. `layer-based` — разделение по слоям (Domain, Data, UI).
+2. `feature-based` — разделение по функциональным фичам.
+3. `combined` — гибридный подход (рекомендуемый Google).
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
-
-
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
+Для переключения между вариантами используйте соответствующие ветки Git.
