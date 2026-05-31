@@ -22,26 +22,14 @@ import com.example.domain.usecase.UpdateWatchStatusUseCase
 import com.example.ui.screens.MainContainer
 import com.example.ui.theme.MyApplicationTheme
 import com.example.ui.viewmodel.AnimeTrackerViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
+  private val viewModel: AnimeTrackerViewModel by viewModel()
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
-
-    val repository: AnimeRepository = DataModule.provideAnimeRepository(applicationContext)
-
-    val viewModel: AnimeTrackerViewModel by viewModels {
-      AnimeTrackerViewModel.Factory(
-        searchAnimeUseCase = SearchAnimeUseCase(repository),
-        getAnimeDetailsUseCase = GetAnimeDetailsUseCase(repository),
-        getWatchlistUseCase = GetWatchlistUseCase(repository),
-        getWatchlistAnimeUseCase = GetWatchlistAnimeUseCase(repository),
-        updateWatchStatusUseCase = UpdateWatchStatusUseCase(repository),
-        removeFromWatchlistUseCase = RemoveFromWatchlistUseCase(repository),
-        loadInitialRecommendationsUseCase = LoadInitialRecommendationsUseCase(repository),
-        getRandomAnimesUseCase = GetRandomAnimesUseCase(repository),
-      )
-    }
 
     setContent {
       MyApplicationTheme {

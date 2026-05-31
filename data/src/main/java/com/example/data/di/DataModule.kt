@@ -1,17 +1,20 @@
 package com.example.data.di
 
-import android.content.Context
 import com.example.data.local.AppDatabase
 import com.example.data.remote.RetrofitClient
 import com.example.data.repository.AnimeRepositoryImpl
 import com.example.domain.repository.AnimeRepository
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 
-object DataModule {
-  fun provideAnimeRepository(context: Context): AnimeRepository {
-    val database = AppDatabase.getDatabase(context.applicationContext)
-    return AnimeRepositoryImpl(
-      apiService = RetrofitClient.apiService,
-      userAnimeDao = database.userAnimeDao
+val dataModule = module {
+  single { AppDatabase.getDatabase(androidContext()) }
+  single { get<AppDatabase>().userAnimeDao }
+  single { RetrofitClient.apiService }
+  single<AnimeRepository> {
+    AnimeRepositoryImpl(
+      apiService = get(),
+      userAnimeDao = get()
     )
   }
 }

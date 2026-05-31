@@ -14,4 +14,5 @@ java {
 dependencies {
   implementation(project(":core"))
   implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.koin.core)
 }
