@@ -14,7 +14,7 @@ android {
   }
 
   defaultConfig {
-    applicationId = "com.aistudio.animetracker.xrvptb"
+    applicationId = "com.luxeny.animetracker"
     minSdk = 24
     targetSdk = 36
     versionCode = 1

@@ -2,13 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="11">
-      <module name="AnimeTracker.core.data" target="21" />
-      <module name="AnimeTracker.feature.detail.data" target="21" />
-      <module name="AnimeTracker.feature.detail.ui" target="21" />
-      <module name="AnimeTracker.feature.explore.data" target="21" />
-      <module name="AnimeTracker.feature.explore.ui" target="21" />
-      <module name="AnimeTracker.feature.watchlist.data" target="21" />
-      <module name="AnimeTracker.feature.watchlist.ui" target="21" />
+      <module name="AnimeTracker.data" target="21" />
+      <module name="AnimeTracker.ui" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>
