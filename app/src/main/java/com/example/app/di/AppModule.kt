@@ -14,7 +14,8 @@ val appModule = module {
             updateWatchStatusUseCase = get(),
             removeFromWatchlistUseCase = get(),
             loadInitialRecommendationsUseCase = get(),
-            getRandomAnimesUseCase = get()
+            getRandomAnimesUseCase = get(),
+            analyticsService = get()
         )
     }
 }

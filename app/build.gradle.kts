@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
@@ -19,6 +21,21 @@ android {
     targetSdk = 36
     versionCode = 1
     versionName = "1.0"
+
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(localPropertiesFile.inputStream())
+    }
+
+    val yandexId = properties.getProperty("YANDEX_CLIENT_ID") ?: "dummy_yandex_id"
+    val vkId = properties.getProperty("VK_APP_ID") ?: "dummy_vk_id"
+    val mapsKey = properties.getProperty("MAPS_API_KEY") ?: "dummy_maps_key"
+
+    manifestPlaceholders["YANDEX_CLIENT_ID"] = yandexId
+    manifestPlaceholders["VK_APP_ID"] = vkId
+    manifestPlaceholders["MAPS_API_KEY"] = mapsKey
+
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
@@ -61,6 +78,9 @@ dependencies {
   implementation(project(":core:model"))
   implementation(project(":core:data"))
   implementation(project(":core:navigation"))
+  implementation(project(":core:analytics"))
+  implementation(project(":feature:auth"))
+  implementation(project(":feature:about"))
   implementation(project(":feature:explore:domain"))
   implementation(project(":feature:explore:data"))
   implementation(project(":feature:explore:ui"))
@@ -90,6 +110,8 @@ dependencies {
   testImplementation(libs.junit)
   testImplementation(libs.konsist)
   testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.mockk)
+  testImplementation(project(":core:analytics"))
   testImplementation(libs.robolectric)
   testImplementation(libs.roborazzi)
   testImplementation(libs.roborazzi.compose)

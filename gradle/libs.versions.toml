@@ -41,6 +41,14 @@ secretsGradlePlugin = "2.0.1"
 koin = "4.0.2"
 konsist = "0.16.1"
 hilt = "2.56.2"
+mockk = "1.13.13"
+appmetrica = "7.0.0"
+securityCrypto = "1.1.0-alpha06"
+mapsCompose = "4.4.1"
+playServicesMaps = "19.0.0"
+playServicesLocationAuth = "21.3.0"
+yandexAuth = "3.1.0"
+vkAuth = "4.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -96,6 +104,13 @@ koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin"
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+appmetrica-analytics = { group = "io.appmetrica.analytics", name = "analytics", version.ref = "appmetrica" }
+androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
+maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "mapsCompose" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+yandex-auth = { group = "com.yandex.android", name = "authsdk", version.ref = "yandexAuth" }
+vk-auth = { group = "com.vk", name = "android-sdk-core", version.ref = "vkAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.core.constant.AppConstants
+import com.example.core.analytics.service.AnalyticsService
 import com.example.core.model.Anime
 import com.example.core.model.UserAnime
 import com.example.core.model.WatchStatus
@@ -29,6 +30,7 @@ class AnimeTrackerViewModel(
   private val removeFromWatchlistUseCase: RemoveFromWatchlistUseCase,
   private val loadInitialRecommendationsUseCase: LoadInitialRecommendationsUseCase,
   private val getRandomAnimesUseCase: GetRandomAnimesUseCase,
+  private val analyticsService: AnalyticsService,
 ) : ViewModel() {
 
   private val _searchQuery = MutableStateFlow("")
@@ -59,6 +61,11 @@ class AnimeTrackerViewModel(
     viewModelScope.launch {
       loadInitialRecommendationsUseCase().collect { _recommendations.value = it }
     }
+    trackScreen("Explore")
+  }
+
+  fun trackScreen(screenName: String) {
+    analyticsService.trackEvent("screen_viewed", mapOf("screen_name" to screenName))
   }
 
   fun loadMoreRecommendations() {
@@ -108,13 +115,15 @@ class AnimeTrackerViewModel(
     private val removeFromWatchlistUseCase: RemoveFromWatchlistUseCase,
     private val loadInitialRecommendationsUseCase: LoadInitialRecommendationsUseCase,
     private val getRandomAnimesUseCase: GetRandomAnimesUseCase,
+    private val analyticsService: AnalyticsService,
   ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
       if (modelClass.isAssignableFrom(AnimeTrackerViewModel::class.java)) {
         return AnimeTrackerViewModel(
           searchAnimeUseCase, getAnimeDetailsUseCase, getWatchlistUseCase, getWatchlistAnimeUseCase,
-          updateWatchStatusUseCase, removeFromWatchlistUseCase, loadInitialRecommendationsUseCase, getRandomAnimesUseCase
+          updateWatchStatusUseCase, removeFromWatchlistUseCase, loadInitialRecommendationsUseCase, getRandomAnimesUseCase,
+          analyticsService
         ) as T
       }
       throw IllegalArgumentException("Unknown ViewModel class")

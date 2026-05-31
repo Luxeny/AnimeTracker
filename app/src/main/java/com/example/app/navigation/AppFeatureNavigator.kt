@@ -9,10 +9,18 @@ class AppFeatureNavigator(
 ) : FeatureNavigator {
   override fun navigateTo(destination: AppDestination) {
     when (destination) {
-      AppDestination.Explore,
-      AppDestination.Watchlist -> viewModel.selectAnime(null)
-
-      is AppDestination.Detail -> viewModel.selectAnime(destination.animeId)
+      AppDestination.Explore -> {
+        viewModel.selectAnime(null)
+        viewModel.trackScreen("Explore")
+      }
+      AppDestination.Watchlist -> {
+        viewModel.selectAnime(null)
+        viewModel.trackScreen("Watchlist")
+      }
+      is AppDestination.Detail -> {
+        viewModel.selectAnime(destination.animeId)
+        viewModel.trackScreen("Detail")
+      }
     }
   }
 

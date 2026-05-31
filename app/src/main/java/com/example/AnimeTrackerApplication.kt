@@ -5,6 +5,9 @@ import coil.ImageLoader
 import android.os.Build
 import coil.ImageLoaderFactory
 import com.example.app.di.appModule
+import com.example.core.analytics.di.analyticsModule
+import com.example.feature.auth.di.authModule
+import com.example.feature.about.di.aboutModule
 import com.example.core.constant.AppConstants
 import com.example.core.data.di.dataModule
 import com.example.feature.detail.domain.di.detailDomainModule
@@ -27,7 +30,10 @@ class AnimeTrackerApplication : Application(), ImageLoaderFactory {
                     dataModule,
                     exploreDomainModule,
                     detailDomainModule,
-                    watchlistDomainModule
+                    watchlistDomainModule,
+                    analyticsModule,
+                    authModule,
+                    aboutModule
                 )
             )
         }
