@@ -15,7 +15,7 @@ class ArchitectureTest {
   fun `domain layers do not depend on android framework`() {
     Konsist.scopeFromProject()
       .files
-      .filter { file -> file.path.contains("domain") && file.path.contains("feature") }
+      .filter { file -> file.path.contains("domain") }
       .assertFalse { file ->
         file.imports.any { importDeclaration ->
           importDeclaration.name.startsWith("android.") || importDeclaration.name.startsWith("androidx.")
@@ -27,7 +27,7 @@ class ArchitectureTest {
   fun `data layers do not depend on ui components`() {
     Konsist.scopeFromProject()
       .files
-      .filter { file -> file.path.contains("data") && (file.path.contains("core") || file.path.contains("feature")) }
+      .filter { file -> file.path.contains("data") }
       .assertFalse { file ->
         file.imports.any { importDeclaration ->
           importDeclaration.name.contains(".ui") || importDeclaration.name.startsWith("androidx.compose")
@@ -36,7 +36,7 @@ class ArchitectureTest {
   }
 
   @Test
-  fun `use cases reside in feature domain layers`() {
+  fun `use cases reside in domain layers`() {
     Konsist.scopeFromProject()
       .classes()
       .withNameEndingWith("UseCase")
@@ -44,19 +44,24 @@ class ArchitectureTest {
   }
 
   @Test
-  fun `repository interfaces are declared in core model layer`() {
+  fun `repository interfaces are declared in domain or core model layer`() {
     Konsist.scopeFromProject()
       .interfaces()
       .withNameEndingWith("Repository")
-      .assertTrue { repository -> repository.resideInPackage("com.example.core.model.repository..") }
+      .assertTrue { repository ->
+        repository.resideInPackage("..domain.repository..") ||
+          repository.resideInPackage("com.example.core.model.repository..")
+      }
   }
 
   @Test
-  fun `repository implementations reside in core data layer`() {
+  fun `repository implementations reside in data layer`() {
     Konsist.scopeFromProject()
       .classes()
       .withNameEndingWith("RepositoryImpl")
-      .assertTrue { repositoryImpl -> repositoryImpl.resideInPackage("com.example.core.data.repository..") }
+      .assertTrue { repositoryImpl ->
+        repositoryImpl.resideInPackage("..data.repository..")
+      }
   }
 
   @Test

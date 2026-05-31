@@ -8,6 +8,8 @@ import com.example.core.model.util.EpisodeProgressCalculator
 
 class UpdateWatchStatusUseCase(private val repository: AnimeRepository) {
   suspend operator fun invoke(userAnime: UserAnime) {
+    if (userAnime.episodesWatched < 0) throw IllegalArgumentException("Episodes watched cannot be negative")
+
     val normalized = userAnime.copy(
       episodesWatched = EpisodeProgressCalculator.resolveEpisodesWatched(
         anime = userAnime.anime,

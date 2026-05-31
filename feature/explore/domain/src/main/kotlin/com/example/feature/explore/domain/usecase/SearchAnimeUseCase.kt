@@ -6,6 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 class SearchAnimeUseCase(private val repository: AnimeRepository) {
     operator fun invoke(query: String): Flow<List<Anime>> {
-        return repository.searchAnimes(query)
+        val trimmedQuery = query.trim()
+        if (trimmedQuery.length < 3 && trimmedQuery.isNotEmpty()) {
+            return kotlinx.coroutines.flow.flowOf(emptyList())
+        }
+        return repository.searchAnimes(trimmedQuery)
     }
 }
