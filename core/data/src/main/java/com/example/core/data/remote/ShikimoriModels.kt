@@ -39,10 +39,11 @@ data class ShikimoriAnime(
 ) {
     fun toDomain(): Anime {
         val imageUrl = image?.original ?: image?.preview ?: ""
-        val absoluteImageUrl = if (imageUrl.startsWith("/")) {
-            "https://shikimori.one$imageUrl"
-        } else {
-            imageUrl
+        val absoluteImageUrl = when {
+            imageUrl.startsWith("/system") -> "https://shikimori.one$imageUrl"
+            imageUrl.startsWith("/assets") -> "https://shikimori.one$imageUrl"
+            imageUrl.isEmpty() -> "https://shikimori.one/assets/globals/missing_original.jpg"
+            else -> imageUrl
         }
         val scoreDouble = score?.toDoubleOrNull() ?: 0.0
         val genreList = genres?.map { it.russian ?: it.name } ?: emptyList()
