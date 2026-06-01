@@ -20,9 +20,9 @@ import com.google.maps.android.compose.*
 fun AboutScreen(
     modifier: Modifier = Modifier
 ) {
-    val officeLocation = LatLng(55.7539, 37.6208) // Moscow, dummy office
+    val officeLocation = LatLng(55.7972, 37.5376) // VK Office Moscow, Leningradsky Ave, 39, Bldg 79
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(officeLocation, 15f)
+        position = CameraPosition.fromLatLngZoom(officeLocation, 16f)
     }
 
     Column(
@@ -88,8 +88,8 @@ fun AboutScreen(
             ) {
                 Marker(
                     state = MarkerState(position = officeLocation),
-                    title = "Главный офис AnimeTracker Inc.",
-                    snippet = "ул. Ильинка, 4, Москва"
+                    title = "Офис VK (AnimeTracker HQ)",
+                    snippet = "Ленинградский пр-т, 39, стр. 79, Москва"
                 )
             }
         }
