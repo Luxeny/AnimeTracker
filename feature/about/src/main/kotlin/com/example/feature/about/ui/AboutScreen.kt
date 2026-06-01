@@ -12,18 +12,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.*
+import androidx.compose.ui.viewinterop.AndroidView
+import com.yandex.mapkit.Animation
+import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.mapview.MapView
 
 @Composable
 fun AboutScreen(
     modifier: Modifier = Modifier
 ) {
-    val officeLocation = LatLng(55.7972, 37.5376) // VK Office Moscow, Leningradsky Ave, 39, Bldg 79
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(officeLocation, 16f)
-    }
+    val officeLocation = Point(55.7972, 37.5376) // VK Office Moscow
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -53,9 +54,8 @@ fun AboutScreen(
                    "AnimeTracker начинался как небольшой студенческий проект, но вырос в " +
                    "полноценный инструмент для тысяч фанатов по всему миру. " +
                    "Наша миссия — сделать поиск и отслеживание аниме максимально простым и приятным.\n\n" +
-                   "Наш главный офис находится в самом сердце Москвы, где мы работаем над " +
-                   "новыми функциями, такими как интеграция нейросетей для рекомендаций и " +
-                   "социальные функции для общения фанатов.",
+                   "Наш главный офис находится в БЦ «SkyLight», где мы работаем над " +
+                   "новыми функциями нашего приложения.",
             style = MaterialTheme.typography.bodyMedium,
             lineHeight = 20.sp
         )
@@ -78,35 +78,31 @@ fun AboutScreen(
             tonalElevation = 4.dp,
             shadowElevation = 4.dp
         ) {
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-                uiSettings = MapUiSettings(
-                    zoomControlsEnabled = true,
-                    myLocationButtonEnabled = true
-                )
-            ) {
-                Marker(
-                    state = MarkerState(position = officeLocation),
-                    title = "Офис VK (AnimeTracker HQ)",
-                    snippet = "Ленинградский пр-т, 39, стр. 79, Москва"
-                )
-            }
+            AndroidView(
+                factory = { ctx ->
+                    MapView(ctx).apply {
+                        map.move(
+                            CameraPosition(officeLocation, 16.0f, 0.0f, 0.0f),
+                            Animation(Animation.Type.SMOOTH, 0f),
+                            null
+                        )
+                        map.mapObjects.addPlacemark(officeLocation)
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
         }
         
         Spacer(modifier = Modifier.height(16.dp))
         
-        val context = LocalContext.current
         Button(
             onClick = { 
-                val gmmIntentUri = Uri.parse("google.navigation:q=${officeLocation.latitude},${officeLocation.longitude}")
-                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                mapIntent.setPackage("com.google.android.apps.maps")
-                context.startActivity(mapIntent)
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("yandexmaps://maps.yandex.ru/?pt=${officeLocation.longitude},${officeLocation.latitude}&z=16&l=map"))
+                context.startActivity(intent)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Построить маршрут в Google Maps")
+            Text("Построить маршрут в Яндекс Картах")
         }
         
         Spacer(modifier = Modifier.height(32.dp))

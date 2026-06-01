@@ -13,6 +13,7 @@ import com.example.core.data.di.dataModule
 import com.example.feature.detail.domain.di.detailDomainModule
 import com.example.feature.explore.domain.di.exploreDomainModule
 import com.example.feature.watchlist.domain.di.watchlistDomainModule
+import com.yandex.mapkit.MapKitFactory
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -21,6 +22,10 @@ import org.koin.core.context.startKoin
 class AnimeTrackerApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
+        
+        com.yandex.mapkit.MapKitFactory.setApiKey(BuildConfig.YANDEX_MAPS_API_KEY)
+        com.yandex.mapkit.MapKitFactory.initialize(this)
+
         startKoin {
             androidLogger()
             androidContext(this@AnimeTrackerApplication)

@@ -31,10 +31,13 @@ android {
     val yandexId = properties.getProperty("YANDEX_CLIENT_ID") ?: "dummy_yandex_id"
     val vkId = properties.getProperty("VK_APP_ID") ?: "dummy_vk_id"
     val mapsKey = properties.getProperty("MAPS_API_KEY") ?: "dummy_maps_key"
+    val yandexMapsKey = properties.getProperty("YANDEX_MAPS_API_KEY") ?: "dummy_yandex_maps_key"
 
     manifestPlaceholders["YANDEX_CLIENT_ID"] = yandexId
     manifestPlaceholders["VK_APP_ID"] = vkId
     manifestPlaceholders["MAPS_API_KEY"] = mapsKey
+    
+    buildConfigField("String", "YANDEX_MAPS_API_KEY", "\"$yandexMapsKey\"")
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }

@@ -16,8 +16,7 @@ android {
 
 dependencies {
   implementation(project(":core"))
-  implementation(libs.maps.compose)
-  implementation(libs.play.services.maps)
+  implementation(libs.yandex.maps)
   implementation(libs.koin.android)
   implementation(libs.koin.androidx.compose)
   implementation(platform(libs.androidx.compose.bom))

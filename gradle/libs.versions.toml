@@ -45,6 +45,7 @@ mockk = "1.13.13"
 appmetrica = "7.0.0"
 securityCrypto = "1.1.0-alpha06"
 mapsCompose = "4.4.1"
+yandexMaps = "4.5.1-lite"
 playServicesMaps = "19.0.0"
 playServicesLocationAuth = "21.3.0"
 yandexAuth = "3.1.0"
@@ -108,6 +109,7 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 appmetrica-analytics = { group = "io.appmetrica.analytics", name = "analytics", version.ref = "appmetrica" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
 maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "mapsCompose" }
+yandex-maps = { group = "com.yandex.android", name = "maps.mobile", version.ref = "yandexMaps" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 yandex-auth = { group = "com.yandex.android", name = "authsdk", version.ref = "yandexAuth" }
 vk-auth = { group = "com.vk", name = "android-sdk-core", version.ref = "vkAuth" }
