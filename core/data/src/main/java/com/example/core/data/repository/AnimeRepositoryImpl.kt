@@ -45,7 +45,7 @@ class AnimeRepositoryImpl(
 
     override fun getRecommendations(): Flow<List<Anime>> = flow {
         try {
-            val remoteRecommended = apiService.getAnimes(order = "popularity", limit = 10)
+            val remoteRecommended = apiService.getAnimes(order = "popularity", limit = 20)
             if (remoteRecommended.isEmpty()) {
                 emit(getMockPopularAnimes())
             } else {
@@ -58,14 +58,12 @@ class AnimeRepositoryImpl(
 
     override fun getRandomAnimes(page: Int): Flow<List<Anime>> = flow {
         try {
-            val remoteRecommended = apiService.getAnimes(page = page, limit = 10, order = "popularity")
-            if (remoteRecommended.isEmpty()) {
-                emit(getMockPopularAnimes().shuffled())
-            } else {
-                emit(remoteRecommended.map { it.toDomain() }.shuffled())
+            val remoteRecommended = apiService.getAnimes(page = page, limit = 20, order = "random")
+            if (remoteRecommended.isNotEmpty()) {
+                emit(remoteRecommended.map { it.toDomain() })
             }
         } catch (e: Exception) {
-            emit(getMockPopularAnimes().shuffled())
+            // Error handling
         }
     }
 

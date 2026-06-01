@@ -57,25 +57,34 @@ class AnimeTrackerViewModel(
   private val _isLoadingMoreRecommendations = MutableStateFlow(false)
   val isLoadingMoreRecommendations: StateFlow<Boolean> = _isLoadingMoreRecommendations.asStateFlow()
 
+  private var currentPage = 1
+
   init {
-    viewModelScope.launch {
-      loadInitialRecommendationsUseCase().collect { _recommendations.value = it }
-    }
-    trackScreen("Explore")
+    loadInitialRecommendations()
+    analyticsService.trackEvent("screen_viewed", mapOf("screen_name" to "Explore"))
   }
 
-  fun trackScreen(screenName: String) {
-    analyticsService.trackEvent("screen_viewed", mapOf("screen_name" to screenName))
+  private fun loadInitialRecommendations() {
+    viewModelScope.launch {
+      loadInitialRecommendationsUseCase().collect { 
+        if (it.isNotEmpty()) {
+          _recommendations.value = it
+          currentPage = 1
+        }
+      }
+    }
   }
 
   fun loadMoreRecommendations() {
-    if (_isLoadingMoreRecommendations.value) return
+    if (_isLoadingMoreRecommendations.value || _searchQuery.value.isNotEmpty()) return
     _isLoadingMoreRecommendations.value = true
+    val nextPage = currentPage + 1
     viewModelScope.launch {
-      getRandomAnimesUseCase((2..50).random()).collect { newList ->
+      getRandomAnimesUseCase(nextPage).collect { newList ->
         if (newList.isNotEmpty()) {
           val existingIds = _recommendations.value.map { it.id }.toSet()
           _recommendations.value = _recommendations.value + newList.filter { it.id !in existingIds }
+          currentPage = nextPage
         }
         _isLoadingMoreRecommendations.value = false
       }
@@ -95,6 +104,10 @@ class AnimeTrackerViewModel(
 
   fun onSearchQueryChanged(query: String) { _searchQuery.value = query }
   fun selectAnime(id: Int?) { _selectedAnimeId.value = id }
+
+  fun trackScreen(name: String) {
+    analyticsService.trackEvent("screen_viewed", mapOf("screen_name" to name))
+  }
 
   fun updateWatchlist(anime: Anime, status: WatchStatus, userScore: Int? = null, episodesWatched: Int = 0, notes: String = "") {
     viewModelScope.launch {

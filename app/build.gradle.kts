@@ -109,6 +109,8 @@ dependencies {
   implementation(libs.koin.androidx.compose)
   implementation(libs.coil.compose)
   implementation(libs.okhttp)
+  implementation(libs.yandex.maps)
+  implementation(libs.yandex.auth)
 
   testImplementation(libs.junit)
   testImplementation(libs.konsist)

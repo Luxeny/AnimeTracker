@@ -1,8 +1,9 @@
 package com.example
 
+import android.app.ActivityManager
 import android.app.Application
+import android.os.Process
 import coil.ImageLoader
-import android.os.Build
 import coil.ImageLoaderFactory
 import com.example.app.di.appModule
 import com.example.core.analytics.di.analyticsModule
@@ -23,25 +24,41 @@ class AnimeTrackerApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         
-        com.yandex.mapkit.MapKitFactory.setApiKey(BuildConfig.YANDEX_MAPS_API_KEY)
-        com.yandex.mapkit.MapKitFactory.initialize(this)
+        if (isMainProcess()) {
+            MapKitFactory.setApiKey(BuildConfig.YANDEX_MAPS_API_KEY)
+            MapKitFactory.initialize(this)
 
-        startKoin {
-            androidLogger()
-            androidContext(this@AnimeTrackerApplication)
-            modules(
-                listOf(
-                    appModule,
-                    dataModule,
-                    exploreDomainModule,
-                    detailDomainModule,
-                    watchlistDomainModule,
-                    analyticsModule,
-                    authModule,
-                    aboutModule
+            startKoin {
+                androidLogger()
+                androidContext(this@AnimeTrackerApplication)
+                modules(
+                    listOf(
+                        appModule,
+                        dataModule,
+                        exploreDomainModule,
+                        detailDomainModule,
+                        watchlistDomainModule,
+                        analyticsModule,
+                        authModule,
+                        aboutModule,
+                    )
                 )
-            )
+            }
         }
+    }
+
+    private fun isMainProcess(): Boolean {
+        val am = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val processes = am.runningAppProcesses
+        val myPid = Process.myPid()
+        if (processes != null) {
+            for (process in processes) {
+                if (process.pid == myPid) {
+                    return process.processName == packageName
+                }
+            }
+        }
+        return false
     }
 
     override fun newImageLoader(): ImageLoader {
@@ -56,7 +73,7 @@ class AnimeTrackerApplication : Application(), ImageLoaderFactory {
                     }
                     .build()
             }
-            .crossfade(true)
+            .crossfade(enable = true)
             .build()
     }
 }

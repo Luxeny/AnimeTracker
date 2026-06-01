@@ -47,7 +47,7 @@ fun ExploreScreen(
     val shouldLoadMore = remember {
         derivedStateOf {
             val lastVisibleItem = gridState.layoutInfo.visibleItemsInfo.lastOrNull() ?: return@derivedStateOf false
-            lastVisibleItem.index >= gridState.layoutInfo.totalItemsCount - 2
+            lastVisibleItem.index >= gridState.layoutInfo.totalItemsCount - 4
         }
     }
 
@@ -67,7 +67,6 @@ fun ExploreScreen(
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        // 1. App Header (Full Span)
         item(span = { GridItemSpan(maxLineSpan) }) {
             Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 Text(
@@ -101,7 +100,6 @@ fun ExploreScreen(
             }
         }
 
-        // 2. Custom Search Bar with Thin Glass Borders (Full Span)
         item(span = { GridItemSpan(maxLineSpan) }) {
             OutlinedTextField(
                 value = searchQuery,
@@ -141,7 +139,6 @@ fun ExploreScreen(
             )
         }
 
-        // 3. Featured Hero Card in Bold Typography Design Layout (Full Span)
         if (searchQuery.isEmpty() && recommendations.isNotEmpty()) {
             val featuredAnime = recommendations.first()
             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -162,7 +159,6 @@ fun ExploreScreen(
                         modifier = Modifier.fillMaxSize()
                     )
 
-                    // Overlay with double gradients for maximum cinematic readability
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -262,7 +258,6 @@ fun ExploreScreen(
             }
         }
 
-        // 4. Section Heading Title (Full Span)
         item(span = { GridItemSpan(maxLineSpan) }) {
             val titleText = if (searchQuery.isNotEmpty()) "РЕЗУЛЬТАТЫ ПОИСКА" else "РЕКОМЕНДАЦИИ ДЛЯ ТЕБЯ"
             Text(
