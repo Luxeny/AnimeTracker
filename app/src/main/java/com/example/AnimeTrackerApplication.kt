@@ -14,7 +14,10 @@ import com.example.core.data.di.dataModule
 import com.example.feature.detail.domain.di.detailDomainModule
 import com.example.feature.explore.domain.di.exploreDomainModule
 import com.example.feature.watchlist.domain.di.watchlistDomainModule
+import com.example.core.analytics.BuildConfig as AnalyticsBuildConfig
 import com.yandex.mapkit.MapKitFactory
+import io.appmetrica.analytics.AppMetrica
+import io.appmetrica.analytics.AppMetricaConfig
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -25,6 +28,9 @@ class AnimeTrackerApplication : Application(), ImageLoaderFactory {
         super.onCreate()
         
         if (isMainProcess()) {
+            val config = AppMetricaConfig.newConfigBuilder(AnalyticsBuildConfig.APPMETRICA_API_KEY).build()
+            AppMetrica.activate(this, config)
+
             MapKitFactory.setApiKey(BuildConfig.YANDEX_MAPS_API_KEY)
             MapKitFactory.initialize(this)
 

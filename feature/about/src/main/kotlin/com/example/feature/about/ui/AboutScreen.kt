@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.yandex.mapkit.Animation
-import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.mapview.MapView
@@ -35,13 +34,14 @@ fun AboutScreen(
         Text(
             text = "О компании", 
             style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
         )
         
         Spacer(modifier = Modifier.height(12.dp))
         
         Text(
-            text = "AnimeTracker Inc.",
+            text = "AnimeTracker Corp.",
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.primary
@@ -50,22 +50,21 @@ fun AboutScreen(
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "Мы — команда энтузиастов, объединенных любовью к японской анимации. " +
-                   "AnimeTracker начинался как небольшой студенческий проект, но вырос в " +
-                   "полноценный инструмент для тысяч фанатов по всему миру. " +
-                   "Наша миссия — сделать поиск и отслеживание аниме максимально простым и приятным.\n\n" +
-                   "Наш главный офис находится в БЦ «SkyLight», где мы работаем над " +
-                   "новыми функциями нашего приложения.",
+            text = "Мы создаем лучший инструмент для любителей аниме. " +
+                   "Наш офис расположен в Москве, и мы всегда рады гостям!\n\n" +
+                   "AnimeTracker Corp. занимается разработкой инновационных решений в сфере " +
+                   "мобильных приложений для трекинга медиаконтента с 2024 года.",
             style = MaterialTheme.typography.bodyMedium,
-            lineHeight = 20.sp
+            color = MaterialTheme.colorScheme.onBackground
         )
         
         Spacer(modifier = Modifier.height(20.dp))
         
         Text(
-            text = "Наше местоположение", 
+            text = "Где мы находимся", 
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground
         )
         
         Spacer(modifier = Modifier.height(8.dp))
@@ -75,8 +74,7 @@ fun AboutScreen(
                 .fillMaxWidth()
                 .height(300.dp),
             shape = MaterialTheme.shapes.medium,
-            tonalElevation = 4.dp,
-            shadowElevation = 4.dp
+            tonalElevation = 4.dp
         ) {
             AndroidView(
                 factory = { ctx ->
@@ -97,12 +95,14 @@ fun AboutScreen(
         
         Button(
             onClick = { 
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("yandexmaps://maps.yandex.ru/?pt=${officeLocation.longitude},${officeLocation.latitude}&z=16&l=map"))
+                // Using geo: intent for routing (universal for Google/Yandex Maps)
+                val uri = Uri.parse("geo:${officeLocation.latitude},${officeLocation.longitude}?q=${officeLocation.latitude},${officeLocation.longitude}(Офис AnimeTracker)")
+                val intent = Intent(Intent.ACTION_VIEW, uri)
                 context.startActivity(intent)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Построить маршрут в Яндекс Картах")
+            Text("Построить маршрут")
         }
         
         Spacer(modifier = Modifier.height(32.dp))

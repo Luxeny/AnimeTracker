@@ -107,6 +107,7 @@ dependencies {
   implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.koin.android)
   implementation(libs.koin.androidx.compose)
+  implementation(libs.appmetrica.analytics)
   implementation(libs.coil.compose)
   implementation(libs.okhttp)
   implementation(libs.yandex.maps)
