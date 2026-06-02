@@ -1,5 +1,6 @@
 package com.example.feature.auth.viewmodel
 
+import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.analytics.service.AnalyticsService
@@ -20,17 +21,17 @@ class LoginViewModel(
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState = _authState.asStateFlow()
 
-    fun loginWithYandex() {
+    fun loginWithYandex(activity: Activity) {
         _authState.value = AuthState.Loading
         viewModelScope.launch {
-            handleResult(authService.loginWithYandex())
+            handleResult(authService.loginWithYandex(activity))
         }
     }
 
-    fun loginWithVk() {
+    fun loginWithVk(activity: Activity) {
         _authState.value = AuthState.Loading
         viewModelScope.launch {
-            handleResult(authService.loginWithVk())
+            handleResult(authService.loginWithVk(activity))
         }
     }
 

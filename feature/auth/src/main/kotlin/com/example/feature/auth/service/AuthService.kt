@@ -1,8 +1,10 @@
 package com.example.feature.auth.service
 
+import android.app.Activity
+
 interface AuthService {
-    suspend fun loginWithYandex(): AuthResult
-    suspend fun loginWithVk(): AuthResult
+    suspend fun loginWithYandex(activity: Activity): AuthResult
+    suspend fun loginWithVk(activity: Activity): AuthResult
     fun logout()
     fun getCurrentUser(): AuthUser?
 }

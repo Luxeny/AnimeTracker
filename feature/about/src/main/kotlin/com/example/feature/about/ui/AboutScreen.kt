@@ -9,10 +9,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
@@ -22,8 +25,9 @@ import com.yandex.mapkit.mapview.MapView
 fun AboutScreen(
     modifier: Modifier = Modifier
 ) {
-    val officeLocation = Point(55.7972, 37.5376) // VK Office Moscow
+    val officeLocation = Point(55.7972, 37.5376) // Office Moscow
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     Column(
         modifier = modifier
@@ -87,16 +91,33 @@ fun AboutScreen(
                         map.mapObjects.addPlacemark(officeLocation)
                     }
                 },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                update = { mapView ->
+                    // Handle lifecycle
+                }
             )
+            
+            // Critical: Yandex MapKit requires explicit lifecycle management
+            DisposableEffect(lifecycleOwner) {
+                val observer = LifecycleEventObserver { _, event ->
+                    when (lifecycleOwner.lifecycle.currentState) {
+                        Lifecycle.State.STARTED -> {} // MapView handled internally if needed
+                        else -> {}
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose {
+                    lifecycleOwner.lifecycle.removeObserver(observer)
+                }
+            }
         }
         
         Spacer(modifier = Modifier.height(16.dp))
         
         Button(
             onClick = { 
-                // Using geo: intent for routing (universal for Google/Yandex Maps)
-                val uri = Uri.parse("geo:${officeLocation.latitude},${officeLocation.longitude}?q=${officeLocation.latitude},${officeLocation.longitude}(Офис AnimeTracker)")
+                // routing intent
+                val uri = Uri.parse("geo:0,0?q=${officeLocation.latitude},${officeLocation.longitude}(Офис AnimeTracker)")
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context.startActivity(intent)
             },

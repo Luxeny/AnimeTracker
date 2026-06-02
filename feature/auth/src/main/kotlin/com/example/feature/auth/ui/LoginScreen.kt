@@ -1,11 +1,12 @@
 package com.example.feature.auth.ui
 
+import android.app.Activity
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.feature.auth.viewmodel.AuthState
 import com.example.feature.auth.viewmodel.LoginViewModel
@@ -18,6 +19,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel()
 ) {
     val authState by viewModel.authState.collectAsState()
+    val context = LocalContext.current as Activity
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
@@ -36,7 +38,7 @@ fun LoginScreen(
             Text(text = "Вход в Anime Tracker", style = MaterialTheme.typography.headlineMedium)
 
             Button(
-                onClick = { viewModel.loginWithYandex() },
+                onClick = { viewModel.loginWithYandex(context) },
                 modifier = Modifier.fillMaxWidth(0.8f),
                 enabled = authState !is AuthState.Loading
             ) {
@@ -44,7 +46,7 @@ fun LoginScreen(
             }
 
             Button(
-                onClick = { viewModel.loginWithVk() },
+                onClick = { viewModel.loginWithVk(context) },
                 modifier = Modifier.fillMaxWidth(0.8f),
                 enabled = authState !is AuthState.Loading
             ) {
