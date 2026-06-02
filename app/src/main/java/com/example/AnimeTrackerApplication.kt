@@ -27,12 +27,13 @@ class AnimeTrackerApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         
+        // Initialize MapKit as early as possible
+        MapKitFactory.setApiKey(BuildConfig.YANDEX_MAPS_API_KEY)
+        MapKitFactory.initialize(this)
+        
         if (isMainProcess()) {
             val config = AppMetricaConfig.newConfigBuilder(AnalyticsBuildConfig.APPMETRICA_API_KEY).build()
             AppMetrica.activate(this, config)
-
-            MapKitFactory.setApiKey(BuildConfig.YANDEX_MAPS_API_KEY)
-            MapKitFactory.initialize(this)
 
             startKoin {
                 androidLogger()

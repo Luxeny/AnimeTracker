@@ -40,6 +40,11 @@ fun MainContainer(
     var selectedTab by remember { mutableStateOf(0) }
     var isLoggedIn by remember { mutableStateOf(tokenStorage.getUser() != null) }
 
+    fun logout() {
+        tokenStorage.clear()
+        isLoggedIn = false
+    }
+
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val isSearching by viewModel.isSearching.collectAsStateWithLifecycle()
     val searchResults by viewModel.searchResults.collectAsStateWithLifecycle()
@@ -205,7 +210,16 @@ fun MainContainer(
                             onDelete = { viewModel.removeFromWatchlist(it) }
                         )
 
-                        2 -> AboutScreen()
+                        2 -> Box(modifier = Modifier.fillMaxSize()) {
+                            AboutScreen()
+                            Button(
+                                onClick = { logout() },
+                                modifier = Modifier.align(androidx.compose.ui.Alignment.TopEnd).padding(16.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                            ) {
+                                Text("Выйти")
+                            }
+                        }
                     }
                 }
             }
