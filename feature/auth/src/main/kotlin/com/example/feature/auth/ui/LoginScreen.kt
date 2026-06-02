@@ -36,14 +36,23 @@ fun LoginScreen(
             Text(text = "Вход в Anime Tracker", style = MaterialTheme.typography.headlineMedium)
 
             Button(
-                onClick = { viewModel.login() },
+                onClick = { viewModel.loginWithYandex() },
+                modifier = Modifier.fillMaxWidth(0.8f),
                 enabled = authState !is AuthState.Loading
             ) {
-                if (authState is AuthState.Loading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
-                } else {
-                    Text("Войти через Яндекс / VK")
-                }
+                Text("Войти через Яндекс")
+            }
+
+            Button(
+                onClick = { viewModel.loginWithVk() },
+                modifier = Modifier.fillMaxWidth(0.8f),
+                enabled = authState !is AuthState.Loading
+            ) {
+                Text("Войти через VK")
+            }
+
+            if (authState is AuthState.Loading) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp))
             }
 
             if (authState is AuthState.Error) {

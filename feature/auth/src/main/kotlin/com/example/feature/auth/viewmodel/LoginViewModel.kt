@@ -3,6 +3,7 @@ package com.example.feature.auth.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.analytics.service.AnalyticsService
+import com.example.feature.auth.service.AuthResult
 import com.example.feature.auth.service.AuthService
 import com.example.feature.auth.service.AuthUser
 import com.example.feature.auth.service.TokenStorage
@@ -19,19 +20,34 @@ class LoginViewModel(
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState = _authState.asStateFlow()
 
-    fun login() {
+    fun loginWithYandex() {
         _authState.value = AuthState.Loading
         viewModelScope.launch {
-            authService.login()
-                .onSuccess { user ->
-                    tokenStorage.saveUser(user)
-                    analyticsService.trackEvent("user_logged_in", mapOf("provider" to user.provider))
-                    _authState.value = AuthState.Success(user)
-                }
-                .onFailure { error ->
-                    analyticsService.trackError("Login failed", error)
-                    _authState.value = AuthState.Error(error.message ?: "Unknown error")
-                }
+            handleResult(authService.loginWithYandex())
+        }
+    }
+
+    fun loginWithVk() {
+        _authState.value = AuthState.Loading
+        viewModelScope.launch {
+            handleResult(authService.loginWithVk())
+        }
+    }
+
+    private fun handleResult(result: AuthResult) {
+        when (result) {
+            is AuthResult.Success -> {
+                tokenStorage.saveUser(result.user)
+                analyticsService.trackEvent("user_logged_in", mapOf("provider" to result.user.provider))
+                _authState.value = AuthState.Success(result.user)
+            }
+            is AuthResult.Error -> {
+                analyticsService.trackError("Login failed", Exception(result.message))
+                _authState.value = AuthState.Error(result.message)
+            }
+            AuthResult.Cancelled -> {
+                _authState.value = AuthState.Idle
+            }
         }
     }
 }

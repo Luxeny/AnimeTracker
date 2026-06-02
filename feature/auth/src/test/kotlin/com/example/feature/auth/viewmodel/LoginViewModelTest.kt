@@ -1,6 +1,7 @@
 package com.example.feature.auth.viewmodel
 
 import com.example.core.analytics.service.FakeAnalyticsService
+import com.example.feature.auth.service.AuthResult
 import com.example.feature.auth.service.AuthService
 import com.example.feature.auth.service.AuthUser
 import com.example.feature.auth.service.TokenStorage
@@ -39,11 +40,11 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `when login successful then track user_logged_in event`() {
+    fun `when yandex login successful then track user_logged_in event`() {
         val user = AuthUser("1", "Test User", "token", "yandex")
-        coEvery { authService.login() } returns Result.success(user)
+        coEvery { authService.loginWithYandex() } returns AuthResult.Success(user)
 
-        viewModel.login()
+        viewModel.loginWithYandex()
         testDispatcher.scheduler.advanceUntilIdle()
 
         val eventSent = analyticsService.trackedEvents.any { 
@@ -53,11 +54,25 @@ class LoginViewModelTest {
     }
 
     @Test
+    fun `when vk login successful then track user_logged_in event`() {
+        val user = AuthUser("2", "VK User", "vk_token", "vk")
+        coEvery { authService.loginWithVk() } returns AuthResult.Success(user)
+
+        viewModel.loginWithVk()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val eventSent = analyticsService.trackedEvents.any { 
+            it.first == "user_logged_in" && it.second["provider"] == "vk"
+        }
+        assertTrue("Analytics event user_logged_in should be sent for VK", eventSent)
+    }
+
+    @Test
     fun `when login fails then track error`() {
         val errorMessage = "Network Error"
-        coEvery { authService.login() } returns Result.failure(Exception(errorMessage))
+        coEvery { authService.loginWithYandex() } returns AuthResult.Error(errorMessage)
 
-        viewModel.login()
+        viewModel.loginWithYandex()
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertTrue("Analytics error should be reported", analyticsService.trackedErrors.isNotEmpty())
