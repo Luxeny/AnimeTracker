@@ -9,13 +9,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
@@ -25,9 +25,27 @@ import com.yandex.mapkit.mapview.MapView
 fun AboutScreen(
     modifier: Modifier = Modifier
 ) {
-    val officeLocation = Point(55.7972, 37.5376) // Office Moscow
+    val officeLocation = Point(55.7972, 37.5376) 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    
+    // Create and remember MapView instance
+    val mapView = remember { MapView(context) }
+
+    // Sync MapView lifecycle with Compose lifecycle
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> mapView.onStart()
+                Lifecycle.Event.ON_STOP -> mapView.onStop()
+                else -> {}
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     Column(
         modifier = modifier
@@ -81,8 +99,8 @@ fun AboutScreen(
             tonalElevation = 4.dp
         ) {
             AndroidView(
-                factory = { ctx ->
-                    MapView(ctx).apply {
+                factory = { 
+                    mapView.apply {
                         map.move(
                             CameraPosition(officeLocation, 16.0f, 0.0f, 0.0f),
                             Animation(Animation.Type.SMOOTH, 0f),
@@ -91,32 +109,14 @@ fun AboutScreen(
                         map.mapObjects.addPlacemark(officeLocation)
                     }
                 },
-                modifier = Modifier.fillMaxSize(),
-                update = { mapView ->
-                    // Handle lifecycle
-                }
+                modifier = Modifier.fillMaxSize()
             )
-            
-            // Critical: Yandex MapKit requires explicit lifecycle management
-            DisposableEffect(lifecycleOwner) {
-                val observer = LifecycleEventObserver { _, event ->
-                    when (lifecycleOwner.lifecycle.currentState) {
-                        Lifecycle.State.STARTED -> {} // MapView handled internally if needed
-                        else -> {}
-                    }
-                }
-                lifecycleOwner.lifecycle.addObserver(observer)
-                onDispose {
-                    lifecycleOwner.lifecycle.removeObserver(observer)
-                }
-            }
         }
         
         Spacer(modifier = Modifier.height(16.dp))
         
         Button(
             onClick = { 
-                // routing intent
                 val uri = Uri.parse("geo:0,0?q=${officeLocation.latitude},${officeLocation.longitude}(Офис AnimeTracker)")
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 context.startActivity(intent)
